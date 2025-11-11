@@ -12,7 +12,11 @@ matrix_test() {
 
   while read -r tag; do
     echo "==> Testing ${tag}"
-    "${BIN_DIR}/test.sh" "${tag}" &
+    if [[ -n "$2" ]]; then
+      "${BIN_DIR}/test.sh" "${tag}" "$2" &
+    else
+      "${BIN_DIR}/test.sh" "${tag}" &
+    fi
     pids+=($!)
   done <<< "${tags}"
 
@@ -42,7 +46,7 @@ matrix_test() {
 matrix_build=$(docker buildx bake --print 2>/dev/null | jq 'has("group")')
 if [ "${matrix_build}" = 'true' ];  then
   echo "==> Matrix build detected"
-  matrix_test
+  matrix_test "$@"
 else
   echo "==> Non-matrix build detected"
   "${BIN_DIR}/test.sh" "$@"

@@ -22,8 +22,8 @@ RUN set -eux; \
 	rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568
-ENV PYTHON_VERSION=3.9.21
-ENV PYTHON_SHA256=3126f59592c9b0d798584755f2bf7b081fa1ca35ce7a6fea980108d752a05bb1
+ENV PYTHON_VERSION=3.9.23
+ENV PYTHON_SHA256=61a42919e13d539f7673cf11d1c404380e28e540510860b9d242196e165709c9
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3003,DL3013,SC2015
@@ -94,7 +94,8 @@ RUN set -eux; \
 		--no-cache-dir \
 		--no-compile \
 		'setuptools==58.1.0' \
-		wheel \
+		# https://github.com/docker-library/python/issues/1023
+		'wheel<0.46' \
 	; \
 	pip3 --version
 
